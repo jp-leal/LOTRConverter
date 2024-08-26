@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SelectCurrency: View {
+    @State var selectedCurrency: Currency
     @Environment(\.dismiss) var dismiss
     var body: some View {
         ZStack{
@@ -16,10 +17,31 @@ struct SelectCurrency: View {
                 .ignoresSafeArea()
                 .background(.brown)
             VStack{
-                Text("Select the currency you are starting with")
+                Text("Select the currency you are starting with:\(Currency.silverPenny.rawValue)")
                     .fontWeight(.bold)
-                CurrencyIcon(currencyImage: .goldpiece, currencyName: "Gold Piece")
                 
+                LazyVGrid(columns: [GridItem(),GridItem(),GridItem()]) {
+                    
+                    ForEach(Currency.allCases){ item in
+                        if selectedCurrency == item {
+                            CurrencyIcon(currencyImage: item.image, currencyName: item.name)
+                                .shadow(color: .black, radius: 10)
+                            
+                                .overlay {
+                                    RoundedRectangle (cornerRadius: 25)
+                                        .stroke(lineWidth: 3)
+                                        .opacity(0.5)
+                                }
+                        } else {
+                            CurrencyIcon(currencyImage: item.image, currencyName: item.name)
+                                .onTapGesture {
+                                    selectedCurrency = item
+                                }
+                        }
+                   }
+                
+                }
+                          
                 Text("Select the currency you are starting with")
                     .fontWeight(.bold)
                 
@@ -41,5 +63,5 @@ struct SelectCurrency: View {
 }
 
 #Preview {
-    SelectCurrency()
+    SelectCurrency(selectedCurrency: .silvePiece)
 }
